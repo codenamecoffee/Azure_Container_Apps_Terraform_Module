@@ -4,7 +4,7 @@ variable "app_name" {
 }
 
 variable "container_image" {
-  description = "Full URL of the Docker image in ACR (ej: miacr.azurecr.io/miapi:v1)." # Necesitamos subir la imagen a ACR para tener nuestra URL
+  description = "Full URL of the Docker image in ACR (ej: miacr.azurecr.io/miapi:v1)."
   type = string
 }
 
