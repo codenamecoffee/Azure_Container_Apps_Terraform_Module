@@ -5,6 +5,7 @@ Módulo de Terraform para desplegar Azure Container Apps en el **Infra Lab** de 
 ## ¿Qué hace este módulo?
 
 - Despliega una **Azure Container App** con configuración básica
+- Crea un **Blob Storage Container** en una Storage Account existente
 - Configura **health probes** automáticamente
 - Habilita **ingress externo** para acceso público
 - Usa el **Container Apps Environment compartido** del lab
@@ -23,7 +24,7 @@ Módulo de Terraform para desplegar Azure Container Apps en el **Infra Lab** de 
 ```hcl
 # En tu rama feature/<equipo>
 module "my_team_app" {
-  source = "git::git@ssh.dev.azure.com:v3/EndavaMVD/SchoolOf2025/mg_fg_terraform_module.git?ref=main"
+  source = "git@ssh.dev.azure.com:v3/EndavaMVD/SchoolOf2025/mg_fg_terraform_module.git?ref=main"
   
   # Variables requeridas
   app_name                     = "mi-equipo-app"  # Nombre único para tu equipo
@@ -43,7 +44,7 @@ output "app_url" {
 
 ```hcl
 module "my_team_app" {
-  source = "git::git@ssh.dev.azure.com:v3/EndavaMVD/SchoolOf2025/mg_fg_terraform_module.git?ref=main"
+  source = "git@ssh.dev.azure.com:v3/EndavaMVD/SchoolOf2025/mg_fg_terraform_module.git?ref=main"
   
   # Variables requeridas
   app_name                     = "mi-equipo-api"
@@ -59,6 +60,21 @@ module "my_team_app" {
 }
 ```
 
+```hcl
+module "my_team_app" {
+  source = "git@ssh.dev.azure.com:v3/EndavaMVD/SchoolOf2025/mg_fg_terraform_module?ref=v1.1.1"
+
+  app_name             = "mi-equipo-app"
+  container_image      = "tu-acr.azurecr.io/tu-app:latest"
+  resource_group_name  = var.resource_group_name
+  container_app_environment_id = var.container_app_environment_id
+
+  # Blob Storage Container
+  container_name       = "myteamcontainer"
+  storage_account_id   = var.storage_account_id
+}
+```
+
 ## Variables
 
 | Nombre | Descripción | Tipo | Por defecto | Requerido |
@@ -71,6 +87,8 @@ module "my_team_app" {
 | `health_check_path` | Endpoint para el health check | `string` | `"/health"` | ❌ |
 | `cpu` | CPU asignada al contenedor | `number` | `0.25` | ❌ |
 | `memory` | Memoria asignada al contenedor | `string` | `"0.5Gi"` | ❌ |
+| `container_name` | Unique name for the Blob Storage Container | `string` | - | ✅ | 
+| `storage_account_id` | ID of the existing Storage Account where the container will be created | `string` | - | ✅ |
 
 ## Outputs
 
@@ -80,6 +98,7 @@ module "my_team_app" {
 | `app_id` | ID de la Container App creada |
 | `app_name` | Nombre de la Container App |
 | `app_fqdn` | Dominio completo de la Container App |
+| `blob_container_name` | Name of the created Blob Storage Container |
 
 ## Health Check
 
