@@ -41,3 +41,13 @@ variable "memory" {
   type        = string
   default     = "0.5Gi"
 }
+
+variable "container_name" {
+  description = "Unique name for the Blob Storage Container"
+  type        = string
+}
+
+variable "storage_account_id" {
+  description = "ID of the existing Storage Account where the container will be created"
+  type        = string
+}

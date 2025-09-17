@@ -65,3 +65,10 @@ resource "azurerm_container_app" "app" {
     Team      = "Mariana Guerra and Federico Gonzalez"
   }
 }
+
+# Blob Storage Container
+resource "azurerm_storage_container" "blob" {
+  name                  = var.container_name
+  storage_account_id    = var.storage_account_id
+  container_access_type = "private"
+}

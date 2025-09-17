@@ -21,3 +21,9 @@ output "app_fqdn" {
   description = "Fully Qualified Domain Name of the Container App"
   value       = azurerm_container_app.app.latest_revision_fqdn
 }
+
+# Name of the Blob Storage Container created.
+output "blob_container_name" {
+  description = "Name of the created Blob Storage Container"
+  value       = azurerm_storage_container.blob.name
+}
