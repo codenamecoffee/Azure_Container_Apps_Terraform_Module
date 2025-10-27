@@ -1,28 +1,43 @@
-# Azure Container Apps Terraform Module
+# 🌐 Azure Container Apps Terraform Module
 
-Módulo de Terraform para desplegar Azure Container Apps en el **Infra Lab** de School of Learning.
+Terraform module for deploying an **Azure Container App** — developed as part of the *School of Software Engineering (Endava, 2025)* training program.
 
-## ¿Qué hace este módulo?
+> ⚙️ **Note:**  
+> This module was originally used within a corporate training environment on Azure DevOps to automate application deployments in a shared Azure Container Apps environment.  
+> That infrastructure is no longer active, but the module remains a useful reference for learning Terraform modularization, Azure resource provisioning, and container app deployment.
 
-- Despliega una **Azure Container App** con configuración básica
-- Crea un **Blob Storage Container** en una Storage Account existente
-- Configura **health probes** automáticamente
-- Habilita **ingress externo** para acceso público
-- Usa el **Container Apps Environment compartido** del lab
+<br>
 
-## Requisitos
+## 🚀 What does this module do?
+
+- Deploys an **Azure Container App** with basic configuration  
+- Creates a **Blob Storage Container** in an existing Storage Account  
+- Automatically configures **health probes**  
+- Enables **external ingress** for public access  
+- Designed to integrate with a shared **Container Apps Environment**
+
+<br>
+
+## 🧩 Requirements
 
 | Name | Version |
-|------|---------|
+|------|----------|
 | terraform | >= 1.6.0 |
 | azurerm | ~> 4.0 |
 
-## Uso en el repositorio de infraestructura
+<br>
 
-### Ejemplo básico para el lab
+## 🧰 Use in the infrastructure repository
+
+Below is an example of how the module was used during the lab.  
+> 🧭 If you clone this repository today, remember that the referenced Azure resources no longer exist, so deployment commands will not succeed without recreating those dependencies.
+
+<br>
+
+### Basic Example
 
 ```hcl
-# En tu rama feature/<equipo>
+# In your branch feature/<equipo>
 module "my_team_app" {
   source = "git@ssh.dev.azure.com:v3/EndavaMVD/SchoolOf2025/mg_fg_terraform_module.git?ref=main"
   
@@ -40,7 +55,9 @@ output "app_url" {
 }
 ```
 
-### Ejemplo con configuración personalizada
+<br>
+
+### Example with Custom Configuration
 
 ```hcl
 module "my_team_app" {
@@ -75,40 +92,45 @@ module "my_team_app" {
 }
 ```
 
-## Variables
+<br>
 
-| Nombre | Descripción | Tipo | Por defecto | Requerido |
-|--------|-------------|------|-------------|:---------:|
-| `app_name` | Nombre único para la Container App (usar nombre del equipo) | `string` | - | ✅ |
-| `container_image` | URL completa de la imagen Docker en ACR | `string` | - | ✅ |
-| `resource_group_name` | Nombre del Resource Group (usar variable del lab) | `string` | - | ✅ |
-| `container_app_environment_id` | ID del Container Apps Environment compartido | `string` | - | ✅ |
-| `container_port` | Puerto que expone tu aplicación | `number` | `8000` | ❌ |
-| `health_check_path` | Endpoint para el health check | `string` | `"/health"` | ❌ |
-| `cpu` | CPU asignada al contenedor | `number` | `0.25` | ❌ |
-| `memory` | Memoria asignada al contenedor | `string` | `"0.5Gi"` | ❌ |
-| `container_name` | Unique name for the Blob Storage Container | `string` | - | ✅ | 
-| `storage_account_id` | ID of the existing Storage Account where the container will be created | `string` | - | ✅ |
+## ⚙️ Variables
 
-## Outputs
+| Name                           | Description                                 | Type     | Default     | Required |
+| ------------------------------ | ------------------------------------------- | -------- | ----------- | :------: |
+| `app_name`                     | Unique name for the Container App           | `string` | -           |     ✅    |
+| `container_image`              | Full URL of the Docker image in ACR         | `string` | -           |     ✅    |
+| `resource_group_name`          | Name of the Resource Group                  | `string` | -           |     ✅    |
+| `container_app_environment_id` | ID of the shared Container Apps Environment | `string` | -           |     ✅    |
+| `container_port`               | Port exposed by the application             | `number` | `8000`      |     ❌    |
+| `health_check_path`            | Endpoint for the health check               | `string` | `"/health"` |     ❌    |
+| `cpu`                          | CPU allocated to the container              | `number` | `0.25`      |     ❌    |
+| `memory`                       | Memory allocated to the container           | `string` | `"0.5Gi"`   |     ❌    |
+| `container_name`               | Name for the Blob Storage container         | `string` | -           |     ✅    |
+| `storage_account_id`           | ID of the existing Storage Account          | `string` | -           |     ✅    |
 
-| Nombre | Descripción |
-|--------|-------------|
-| `app_url` | URL pública para acceder a tu aplicación |
-| `app_id` | ID de la Container App creada |
-| `app_name` | Nombre de la Container App |
-| `app_fqdn` | Dominio completo de la Container App |
-| `blob_container_name` | Name of the created Blob Storage Container |
+<br>
 
-## Health Check
+## 📤 Outputs
 
-El módulo configura automáticamente health probes que verifican:
-- **Liveness**: Si el contenedor está funcionando
-- **Readiness**: Si está listo para recibir tráfico
+| Name                  | Description                                      |
+| --------------------- | ------------------------------------------------ |
+| `app_url`             | Public URL of the deployed app                   |
+| `app_id`              | ID of the created Container App                  |
+| `app_name`            | Name of the Container App                        |
+| `app_fqdn`            | Fully qualified domain name of the Container App |
+| `blob_container_name` | Name of the created Blob Storage Container       |
 
-**Importante**: Tu aplicación debe responder con HTTP 200 en el endpoint `health_check_path`.
 
-### Ejemplo de endpoint de health
+<br>
+
+## 🩺 Health Check
+
+The module automatically configures **liveness** and **readiness** probes.
+
+Your application must respond with HTTP 200 on the health_check_path.
+
+### Example (FastAPI):
 
 ```python
 # FastAPI
@@ -117,13 +139,38 @@ def health():
     return {"status": "ok"}
 ```
 
-## Workflow para el Lab
+<br>
 
-1. **Crear rama**: `feature/<tu-equipo>`
-2. **Usar este módulo** en tu archivo `.tf` con la URL del repo en `source`
-3. **Configurar variables** requeridas
-4. **Crear Pull Request** y agregar a **Gonzalo Rodriguez** como reviewer
-5. **Pipeline automática**: 
-   - Al abrir PR → `terraform plan`
-   - Al hacer merge → `terraform apply`
+## 🧪 Training Workflow (Original Lab Setup)
 
+1. Create a branch – feature/<team-name>
+
+2. Reference this module in your .tf files using the repository URL.
+
+3. Set all required variables (environment IDs were shared by the instructor).
+
+4. Open a Pull Request and request review from Gonzalo Rodríguez (Endava).
+
+5. Pipeline behavior:
+   - ```terraform plan``` runs automatically on PR.
+   - ```terraform apply``` runs after merge to main.
+
+<br>
+
+## 👥 Authors
+
+- **Federico González** ([codenamecoffee](https://github.com/codenamecoffee))
+- **Mariana Guerra** ([MarianaGuerraC](https://github.com/MarianaGuerraC))
+
+<br>
+
+## License
+
+This project is licensed under the MIT License.
+
+<br>
+
+## 🎓 Educational Context
+
+This module was developed as part of the School of Software Engineering – Endava (2025) to practice Terraform module design, Azure resource provisioning, and CI/CD workflows for Infrastructure as Code.
+It is intended for educational purposes and reference only.
