@@ -15,6 +15,7 @@ Terraform module for deploying an **Azure Container App** — developed as part 
 - Automatically configures **health probes**  
 - Enables **external ingress** for public access  
 - Designed to integrate with a shared **Container Apps Environment**
+- It's consumed by the infrastructure repository: [**Infrastructure Repository - GitHub**](https://github.com/codenamecoffee/Azure_Container_Apps_Terraform_Infrastructure)
 
 <br>
 
@@ -24,6 +25,27 @@ Terraform module for deploying an **Azure Container App** — developed as part 
 |------|----------|
 | terraform | >= 1.6.0 |
 | azurerm | ~> 4.0 |
+
+<br>
+
+## Module Structure
+
+```
+mg_fg_terraform_module/
+├── main.tf            # Main Terraform configuration for resources
+├── variables.tf       # Input variables for the module
+├── outputs.tf         # Output values exported by the module
+├── versions.tf        # Required Terraform and provider versions
+├── README.md          # This file.
+```
+
+### Description:
+
+- main.tf: Contains the resource definitions (Container App, Blob Storage Container, etc.).
+- variables.tf: Declares all input variables required to use the module.
+- outputs.tf: Defines outputs that expose resource information after deployment.
+- versions.tf: Specifies the minimum Terraform and provider versions for compatibility.
+- README.md: Provides documentation, usage examples, and workflow instructions.
 
 <br>
 
